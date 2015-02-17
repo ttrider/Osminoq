@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Etls>
+<Etl>
+  <Extract Id="EmployeeNames" Type="text/csv" >
+    <Dataset Index="0" Id="EmployeeNames">
+      <Field Index="0" Name="Name" Type="String"/>
+      <Field Index="1" Name="PositionTitle" Type="String"/>
+      <Field Index="2" Name="Department" Type="String"/>
+      <Field Index="3" Name="EmployeeAnnualSalary" Type="Double" Pattern="\$(?'value'[0-9.,]+)"/>
+    </Dataset>
+  </Extract>
+</Etl>
+<Etl>
+  <Extract Id="PoliceStations" Type="text/csv" >
+    <Dataset Index="0" Id="PoliceStations">
+      <Field Index="0" Name="Districs" Type="String"/>
+      <Field Index="1" Name="Address" Type="String"/>
+      <Field Index="2" Name="City" Type="String"/>
+      <Field Index="3" Name="State" Type="String" />
+      <Field Index="4" Name="Zip" Type="String" Validate="[0-9]{5}(\s*-\s*[0-9]+)?"/>
+      <Field Index="5" Name="Website" Type="String" />
+      <Field Index="6" Name="Phone" Type="String" />
+      <Field Index="7" Name="Fax" Type="String" />
+      <Field Index="8" Name="TTY" Type="String" />
+      <Field Index="9" Name="Latitude" Type="Double" Pattern="\((?'value'[\-0-9\.]+)," />
+      <Field Index="9" Name="Longitude" Type="Double" Pattern=",\s*(?'value'[\-0-9\.]+)\)" />
+  </Dataset>
+  </Extract>
+</Etl>
+
+</Etls>

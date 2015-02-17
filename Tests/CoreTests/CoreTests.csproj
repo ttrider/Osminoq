@@ -57,16 +57,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Current_Employee_Names__Salaries__and_Position_Titles.csv" />
     <None Include="packages.config" />
     <None Include="Police_Stations.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Sex_Offenders.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Osminoq\Osminoq.csproj">
       <Project>{4fb62eca-7282-4f35-80a0-d377b61bb438}</Project>
       <Name>Osminoq</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLFile1.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
