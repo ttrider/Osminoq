@@ -21,7 +21,14 @@
       <Field Index="5" Name="Website" Type="String" />
       <Field Index="6" Name="Phone" Type="String" />
       <Field Index="7" Name="Fax" Type="String" />
-      <Field Index="8" Name="TTY" Type="String" />
+      <Field Index="8" Name="TTY">
+          <Array Type="String"/>
+      </Field>
+      <Field Index="8" Name="TTY3">
+        <Object>
+          <Field Index="0" Name="Districs" Type="String"/>
+        </Object>
+      </Field>
       <Field Index="9" Name="Latitude" Type="Double" Pattern="\((?'value'[\-0-9\.]+)," />
       <Field Index="9" Name="Longitude" Type="Double" Pattern=",\s*(?'value'[\-0-9\.]+)\)" />
   </Dataset>
