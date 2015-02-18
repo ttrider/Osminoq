@@ -49,6 +49,7 @@
     <Compile Include="DataErrorStrategy.cs" />
     <Compile Include="DataItem.cs" />
     <Compile Include="DataItemFactory.cs" />
+    <Compile Include="DataItemProperty.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="IDataItem.cs" />
     <Compile Include="IDataItemInternal.cs" />

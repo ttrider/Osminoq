@@ -10,16 +10,21 @@ namespace TTRider.Osminoq.TypeHandlers
 {
     class TypeHandlerFactory
     {
-        [Import(typeof (IDataItemTypeHandler))] 
+        [ImportMany(typeof (IDataItemTypeHandler))] 
         private List<IDataItemTypeHandler> handlers;
 
-        public MethodInfo GetTypeHandler(string name)
+        public bool TryGetTypeHandler(string name, out MethodInfo mi)
         {
+            mi = null;
             if (handlers != null)
             {
-                
+                mi = (
+                    from handler in handlers 
+                    from attr in handler.GetType().GetCustomAttributes<TypeHandlerAttribute>() 
+                    where string.Equals(name, attr.TypeName, StringComparison.OrdinalIgnoreCase) 
+                    select handler.ConverterInfo).FirstOrDefault();
             }
-            return null;
+            return mi!=null;
         }
     }
 }

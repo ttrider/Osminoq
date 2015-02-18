@@ -46,12 +46,10 @@ namespace TTRider.Osminoq
                 throw new InvalidOperationException("CurrentPartiton is not set");
             }
 
+            var di = Activator.CreateInstance(this.currentPartitionDataType);
+            ((IDataItemInternal)di).Initialize(buffer);
 
-
-
-            // translate it
-
-            return null;
+            return (IDataItem)di;
         }
 
     }

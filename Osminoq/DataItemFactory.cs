@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -76,17 +77,28 @@ namespace TTRider.Osminoq
 
                 var initializeMethod = typeBuilder.DefineMethod("Initialize", MethodAttributes.Family | MethodAttributes.Virtual, null, new Type[] { typeof(string[]) });
                 var init = initializeMethod.GetILGenerator();
-
+                int index = 0;
                 foreach (var field in partition.Fields)
                 {
                     var name = field.Name; 
                     //TODO: cleanup name
+                    
+                    MethodInfo handler;
+                    if (!typeHandlerFactory.Value.TryGetTypeHandler(field.DataType, out handler))
+                    {
+                        throw new InvalidDataException("Unknown Data type:" + field.DataType);
+                    }
 
-                    var typeHandler = field.DataType;
+                    var fieldDef = typeBuilder.DefineField("_" + name, handler.ReturnType, FieldAttributes.Public);
 
-                    var handler = typeHandlerFactory.Value.GetTypeHandler(field.DataType);
 
-                    //handler.ReturnType
+                    init.Emit(OpCodes.Ldarg_0);
+                    init.Emit(OpCodes.Ldarg_1);
+                    init.Emit(OpCodes.Ldc_I4_S, index++);
+                    init.Emit(OpCodes.Ldelem_Ref);
+                    init.Emit(OpCodes.Call, handler);
+                    init.Emit(OpCodes.Stfld, fieldDef);
+
                 }
 
 

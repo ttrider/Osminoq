@@ -4,10 +4,6 @@ namespace TTRider.Osminoq
 {
     public interface IDataStreamFieldInfo : IDataStreamObjectInfo
     {
-        string Id { get; }
-
-        int Index { get; }
-
         string Name { get; }
 
         Regex Template { get; }
@@ -17,6 +13,8 @@ namespace TTRider.Osminoq
         string DataType { get; }
 
         bool IsArray { get; }
+
+        string Input { get; }
 
     }
 }
