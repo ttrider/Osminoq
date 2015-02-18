@@ -8,5 +8,11 @@ namespace TTRider.Osminoq
 {
     public interface IExtractorSettings
     {
+        Encoding Encoding { get; set; }
+        int BufferSize { get; set; }
+        string Delimeter { get; set; }
+        bool HasHeaderRecord { get; set; }
+
+        DataErrorStrategy DataErrorStrategy { get; }
     }
 }

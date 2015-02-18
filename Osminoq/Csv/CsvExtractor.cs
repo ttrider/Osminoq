@@ -1,32 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace TTRider.Osminoq.Csv
 {
-    public class CsvExtractor : Extractor
+    public class CsvExtractor : TextExtractor
     {
-        private CsvReader reader;
+        private TextReader textReader;
+        private CsvParser parser;
+        private int? columnCount;
 
         public CsvExtractor(Stream stream, IExtractorSettings settings)
+            :base(settings)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             if (settings == null) throw new ArgumentNullException("settings");
 
-           // CsvConfiguration
+            this.textReader = new StreamReader(stream, settings.Encoding, true, settings.BufferSize, true);
 
-            //reader = new CsvReader();
-
+            this.parser = new CsvParser(this.textReader, new CsvConfiguration()
+            {
+                Delimiter = settings.Delimeter,
+                DetectColumnCountChanges = false,
+                Encoding = settings.Encoding,
+                CultureInfo = CultureInfo.CurrentCulture,
+                IgnoreBlankLines = true,
+                BufferSize = settings.BufferSize,
+                HasHeaderRecord = settings.HasHeaderRecord
+            });
         }
 
-        public override IDataItem ExtractDataItem()
+
+        protected override string[] ExtractRecord()
         {
-            throw new NotImplementedException();
+            var buffer = this.parser.Read();
+
+            if (buffer == null)
+            {
+                return null;
+            }
+
+            var oldColumnCount = this.columnCount ?? (this.columnCount = this.parser.FieldCount);
+
+            if (oldColumnCount != this.parser.FieldCount)
+            {
+                return null;
+            }
+            return buffer;
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                var localReader = Interlocked.Exchange(ref this.textReader, null);
+                if (localReader != null)
+                {
+                    localReader.Dispose();
+                }
+
+                var localParser = Interlocked.Exchange(ref this.parser, null);
+                if (localParser != null)
+                {
+                    localParser.Dispose();
+                }
+
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
