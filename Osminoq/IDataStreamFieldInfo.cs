@@ -14,7 +14,7 @@ namespace TTRider.Osminoq
         
         Regex Validation { get; }
 
-        DataType? DataType { get; }
+        string DataType { get; }
 
         bool IsArray { get; }
 

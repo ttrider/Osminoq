@@ -1,8 +1,12 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Reflection;
 
 namespace TTRider.Osminoq.TypeHandlers
 {
+    [Export(typeof(IDataItemTypeHandler))]
+    [TypeHandler(TypeName = "string")]
+    [TypeHandler(TypeName = "System.String")]
     public class StringTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
@@ -20,7 +24,11 @@ namespace TTRider.Osminoq.TypeHandlers
         }
     }
 
-
+    [TypeHandler(TypeName = "int")]
+    [TypeHandler(TypeName = "integer")]
+    [TypeHandler(TypeName = "int32")]
+    [TypeHandler(TypeName = "System.Int32")]
+    [Export(typeof(IDataItemTypeHandler))]
     public class IntegerTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
@@ -44,6 +52,12 @@ namespace TTRider.Osminoq.TypeHandlers
         }
     }
 
+    [TypeHandler(TypeName = "number")]
+    [TypeHandler(TypeName = "float")]
+    [TypeHandler(TypeName = "double")]
+    [TypeHandler(TypeName = "System.Double")]
+    [TypeHandler(TypeName = "System.Float")]
+    [Export(typeof(IDataItemTypeHandler))]
     public class DoubleTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
@@ -67,6 +81,11 @@ namespace TTRider.Osminoq.TypeHandlers
         }
     }
 
+    [TypeHandler(TypeName = "bit")]
+    [TypeHandler(TypeName = "bool")]
+    [TypeHandler(TypeName = "boolean")]
+    [TypeHandler(TypeName = "System.Boolean")]
+    [Export(typeof(IDataItemTypeHandler))]
     public class BooleanTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
@@ -90,6 +109,11 @@ namespace TTRider.Osminoq.TypeHandlers
         }
     }
 
+    [TypeHandler(TypeName = "date")]
+    [TypeHandler(TypeName = "time")]
+    [TypeHandler(TypeName = "datetime")]
+    [TypeHandler(TypeName = "System.DateTime")]
+    [Export(typeof(IDataItemTypeHandler))]
     public class DateTimeTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
@@ -113,6 +137,11 @@ namespace TTRider.Osminoq.TypeHandlers
         }
     }
 
+    [TypeHandler(TypeName = "guid")]
+    [TypeHandler(TypeName = "uuid")]
+    [TypeHandler(TypeName = "uniqueidentifier")]
+    [TypeHandler(TypeName = "System.Guid")]
+    [Export(typeof(IDataItemTypeHandler))]
     public class GuidTypeHandler : IDataItemTypeHandler
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);

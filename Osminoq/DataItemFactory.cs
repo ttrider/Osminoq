@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -13,11 +15,17 @@ namespace TTRider.Osminoq
 {
     public static class DataItemFactory
     {
-        private static volatile int TypeIndex = 0;
+        private static int TypeIndex = 0;
 
-        private static DataItemTypeHandlers TypeHandlers = new DataItemTypeHandlers();
+        static ConcurrentDictionary<IExtractorPartition, Type> partitionDatItemTypes = new ConcurrentDictionary<IExtractorPartition, Type>(PartitionComparer.Default);
 
-        static ConcurrentDictionary<IExtractorPartition, Type> partitionDatItemTypes = new ConcurrentDictionary<IExtractorPartition, Type>(PartitionComparer.Default); 
+        static Lazy<TypeHandlerFactory> typeHandlerFactory = new Lazy<TypeHandlerFactory>(() =>
+        {
+            var thf = new TypeHandlerFactory();
+            CompositionContainer.Value.SatisfyImportsOnce(thf);
+            return thf;
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
+
 
         static Lazy<ModuleBuilder> moduleBuilder = new Lazy<ModuleBuilder>(() =>
         {
@@ -26,15 +34,18 @@ namespace TTRider.Osminoq
             return dynamicAssembly.DefineDynamicModule("TTRider.Osminoq.Dynamic");
         }, LazyThreadSafetyMode.ExecutionAndPublication);
 
+        public static Lazy<CompositionContainer> CompositionContainer = new Lazy<CompositionContainer>(() =>
+        {
+            var catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+            catalog.Catalogs.Add(new ApplicationCatalog());
+            return new CompositionContainer(catalog);
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
+
+
+
         static DataItemFactory()
         {
-            TypeHandlers.Add(new StringTypeHandler());
-            TypeHandlers.Add(new IntegerTypeHandler());
-            TypeHandlers.Add(new DoubleTypeHandler());
-            TypeHandlers.Add(new BooleanTypeHandler());
-            TypeHandlers.Add(new DateTimeTypeHandler());
-            TypeHandlers.Add(new GuidTypeHandler());
-            
         }
 
         
@@ -73,8 +84,9 @@ namespace TTRider.Osminoq
 
                     var typeHandler = field.DataType;
 
+                    var handler = typeHandlerFactory.Value.GetTypeHandler(field.DataType);
 
-
+                    //handler.ReturnType
                 }
 
 

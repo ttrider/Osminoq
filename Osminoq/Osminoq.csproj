@@ -34,6 +34,8 @@
       <HintPath>..\packages\CsvHelper.2.11.0\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.Registration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,8 +49,6 @@
     <Compile Include="DataErrorStrategy.cs" />
     <Compile Include="DataItem.cs" />
     <Compile Include="DataItemFactory.cs" />
-    <Compile Include="DataItemTypeHandlers.cs" />
-    <Compile Include="DataType.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="IDataItem.cs" />
     <Compile Include="IDataItemInternal.cs" />
@@ -66,6 +66,8 @@
     <Compile Include="Settings\ExtractorSettings.cs" />
     <Compile Include="TextExtractor.cs" />
     <Compile Include="TypeHandlers\StringTypeHandler.cs" />
+    <Compile Include="TypeHandlers\TypeHandlerAttribute.cs" />
+    <Compile Include="TypeHandlers\TypeHandlerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
