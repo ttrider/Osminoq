@@ -1,9 +1,9 @@
 ﻿namespace TTRider.Osminoq
 {
-    public interface IDataStreamPartitionInfo : IDataStreamObjectInfo
+    public interface IExtractorPartition : IDataStreamObjectInfo
     {
         string Id { get; }
 
-        int Index { get; }
+        int? Index { get; }
     }
 }

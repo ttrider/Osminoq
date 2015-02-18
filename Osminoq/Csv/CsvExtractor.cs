@@ -16,12 +16,19 @@ namespace TTRider.Osminoq.Csv
         private TextReader textReader;
         private CsvParser parser;
         private int? columnCount;
+        
 
         public CsvExtractor(Stream stream, IExtractorSettings settings)
-            :base(settings)
+            : base(settings)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             if (settings == null) throw new ArgumentNullException("settings");
+
+            if (settings.Partitions == null) throw new ArgumentException("settings.Partitions == null", "settings");
+            if (settings.Partitions.Count == 0) throw new ArgumentOutOfRangeException("settings.Partitions is empty", "settings");
+
+            // we need a partiton with lowest index, or the first of no index assigned
+            this.CurrentPartition = settings.Partitions.OrderBy(p => p.Index.HasValue ? p.Index.Value : -1).First();
 
             this.textReader = new StreamReader(stream, settings.Encoding, true, settings.BufferSize, true);
 
@@ -72,7 +79,6 @@ namespace TTRider.Osminoq.Csv
                 {
                     localParser.Dispose();
                 }
-
             }
 
             base.Dispose(disposing);

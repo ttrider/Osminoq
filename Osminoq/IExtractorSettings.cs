@@ -14,5 +14,7 @@ namespace TTRider.Osminoq
         bool HasHeaderRecord { get; set; }
 
         DataErrorStrategy DataErrorStrategy { get; }
+
+        IList<IExtractorPartition> Partitions { get; } 
     }
 }

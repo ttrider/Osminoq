@@ -4,6 +4,6 @@ namespace TTRider.Osminoq
 {
     public interface IDataStreamObjectInfo
     {
-        IEnumerable<IDataStreamFieldInfo> Fields { get; }
+        IList<IDataStreamFieldInfo> Fields { get; }
     }
 }

@@ -8,6 +8,6 @@ namespace TTRider.Osminoq
 
         string Type { get; }
 
-        IEnumerable<IDataStreamPartitionInfo> Partitions { get; }
+        IEnumerable<IExtractorPartition> Partitions { get; }
     }
 }

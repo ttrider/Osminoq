@@ -55,14 +55,13 @@
   <ItemGroup>
     <Compile Include="CsvTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CsvExtractorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Current_Employee_Names__Salaries__and_Position_Titles.csv" />
+    <None Include="Data\Current_Employee_Names__Salaries__and_Position_Titles.csv" />
     <None Include="packages.config" />
-    <None Include="Police_Stations.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sex_Offenders.csv" />
+    <EmbeddedResource Include="Data\Police_Stations.csv" />
+    <None Include="Data\Sex_Offenders.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Osminoq\Osminoq.csproj">
@@ -71,7 +70,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XMLFile1.xml" />
+    <Content Include="Data\XMLFile1.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mocks\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
