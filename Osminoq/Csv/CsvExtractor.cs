@@ -11,11 +11,12 @@ using CsvHelper.Configuration;
 
 namespace TTRider.Osminoq.Csv
 {
-    public class CsvExtractor : TextExtractor
+    public class CsvExtractor : Extractor
     {
         private TextReader textReader;
         private CsvParser parser;
-        private int? columnCount;
+
+        protected TabularTextRecordsetDefiniton CurrentPartition { get; private set; }
         
 
         public CsvExtractor(Stream stream, IExtractorSettings settings)
@@ -27,15 +28,13 @@ namespace TTRider.Osminoq.Csv
             if (settings.Partitions == null) throw new ArgumentException("settings.Partitions == null", "settings");
             if (settings.Partitions.Count == 0) throw new ArgumentOutOfRangeException("settings.Partitions is empty", "settings");
 
-            // we need a partiton with lowest index, or the first of no index assigned
-            this.CurrentPartition = settings.Partitions.OrderBy(p => p.Index.HasValue ? p.Index.Value : -1).First();
 
             this.textReader = new StreamReader(stream, settings.Encoding, true, settings.BufferSize, true);
 
             this.parser = new CsvParser(this.textReader, new CsvConfiguration()
             {
                 Delimiter = settings.Delimeter,
-                DetectColumnCountChanges = false,
+                DetectColumnCountChanges = true,
                 Encoding = settings.Encoding,
                 CultureInfo = CultureInfo.CurrentCulture,
                 IgnoreBlankLines = true,
@@ -45,7 +44,7 @@ namespace TTRider.Osminoq.Csv
         }
 
 
-        protected override string[] ExtractRecord()
+        protected string[] ExtractRecord()
         {
             var buffer = this.parser.Read();
 
@@ -54,13 +53,36 @@ namespace TTRider.Osminoq.Csv
                 return null;
             }
 
-            var oldColumnCount = this.columnCount ?? (this.columnCount = this.parser.FieldCount);
+            // at this point we have a first record, with column names, if available
+            if (this.CurrentPartition == null)
+            {
+                // we support only one partition for CSV files
+                var partition = this.Settings.Partitions.First();
+                //TODO validate that it contains known data types
 
-            if (oldColumnCount != this.parser.FieldCount)
+
+                if (Settings.HasHeaderRecord)
+                {
+                    // buffer contains field names
+                    this.CurrentPartition = new TabularTextRecordsetDefiniton(partition, buffer);
+
+                    // we actually need to return the first data row now
+                    return this.ExtractRecord();
+                }
+                this.CurrentPartition = new TabularTextRecordsetDefiniton(partition, buffer.Length);
+            }
+            return buffer;
+        }
+
+        public override IDataItem ExtractDataItem()
+        {
+            var buffer = this.ExtractRecord();
+            if (buffer == null)
             {
                 return null;
             }
-            return buffer;
+
+            return this.CurrentPartition.CreateDataItem(buffer);
         }
 
 
@@ -83,6 +105,7 @@ namespace TTRider.Osminoq.Csv
 
             base.Dispose(disposing);
         }
+
     }
 }
 

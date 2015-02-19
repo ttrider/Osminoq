@@ -10,11 +10,11 @@ namespace TTRider.Osminoq.Settings
     {
         public ExtractorPartition()
         {
-            this.Fields = new List<IDataStreamFieldInfo>();
+            this.Fields = new List<IDataItemProperty>();
         }
 
 
-        public IList<IDataStreamFieldInfo> Fields { get; private set; }
+        public IList<IDataItemProperty> Fields { get; private set; }
         public string Id { get; set; }
         public int? Index { get; set; }
     }

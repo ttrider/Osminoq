@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq.TypeHandlers
 {
-    class TypeHandlerFactory
+    internal class TypeHandlerFactory
     {
         [ImportMany(typeof (IDataItemTypeHandler))] 
         private List<IDataItemTypeHandler> handlers;

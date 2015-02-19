@@ -1,56 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace TTRider.Osminoq
-{
-    public abstract class TextExtractor :  Extractor
-    {
-        private IExtractorPartition currentPartition;
-        private Type currentPartitionDataType;
+//namespace TTRider.Osminoq
+//{
+//    public abstract class TextExtractor :  Extractor
+//    {
+//        private IExtractorPartition currentPartition;
+//        private Type currentPartitionDataType;
         
-        protected TextExtractor(IExtractorSettings settings)
-            :base(settings)
-        {
-        }
+//        protected TextExtractor(IExtractorSettings settings)
+//            :base(settings)
+//        {
+//        }
 
-        protected abstract string[] ExtractRecord();
+//        protected abstract string[] ExtractRecord();
 
-        protected IExtractorPartition CurrentPartition
-        {
-            get { return this.currentPartition; }
-            set
-            {
-                if (this.currentPartition != value)
-                {
-                    this.currentPartition = value;
-                    this.currentPartitionDataType = DataItemFactory.GetDataItemType(CurrentPartition);
-                }
+//        protected RecordsetDefiniton CurrentPartition
+//        {
+//            get { return this.currentPartition; }
+//            set
+//            {
+//                if (this.currentPartition != value)
+//                {
+//                    this.currentPartition = value;
+//                    this.currentPartitionDataType = DataItemFactory.GetDataItemType(CurrentPartition);
+//                }
                 
-            }
-        }
+//            }
+//        }
 
 
-        public override IDataItem ExtractDataItem()
-        {
-            var buffer = this.ExtractRecord();
-            if (buffer == null)
-            {
-                return null;
-            }
+//        public override IDataItem ExtractDataItem()
+//        {
+//            var buffer = this.ExtractRecord();
+//            if (buffer == null)
+//            {
+//                return null;
+//            }
 
-            if (this.currentPartitionDataType == null)
-            {
-                throw new InvalidOperationException("CurrentPartiton is not set");
-            }
+//            if (this.currentPartitionDataType == null)
+//            {
+//                throw new InvalidOperationException("CurrentPartiton is not set");
+//            }
 
-            var di = Activator.CreateInstance(this.currentPartitionDataType);
-            ((IDataItemInternal)di).Initialize(buffer);
+//            var di = Activator.CreateInstance(this.currentPartitionDataType);
+//            ((IDataItemInternal)di).Initialize(buffer);
 
-            return (IDataItem)di;
-        }
+//            return (IDataItem)di;
+//        }
 
-    }
-}
+//    }
+//}

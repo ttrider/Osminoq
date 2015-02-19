@@ -55,7 +55,7 @@
     <Compile Include="IDataItemInternal.cs" />
     <Compile Include="IDataItemTypeHandler.cs" />
     <Compile Include="IDataPackageInfo.cs" />
-    <Compile Include="IDataStreamFieldInfo.cs" />
+    <Compile Include="IDataItemProperty.cs" />
     <Compile Include="IDataStreamInfo.cs" />
     <Compile Include="IDataStreamObjectInfo.cs" />
     <Compile Include="IDataStreamPartitionInfo.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Record.cs" />
     <Compile Include="Settings\ExtractorPartition.cs" />
     <Compile Include="Settings\ExtractorSettings.cs" />
+    <Compile Include="TabularTextPartition.cs" />
     <Compile Include="TextExtractor.cs" />
     <Compile Include="TypeHandlers\StringTypeHandler.cs" />
     <Compile Include="TypeHandlers\TypeHandlerAttribute.cs" />

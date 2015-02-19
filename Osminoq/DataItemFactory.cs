@@ -20,7 +20,7 @@ namespace TTRider.Osminoq
 
         static ConcurrentDictionary<IExtractorPartition, Type> partitionDatItemTypes = new ConcurrentDictionary<IExtractorPartition, Type>(PartitionComparer.Default);
 
-        static Lazy<TypeHandlerFactory> typeHandlerFactory = new Lazy<TypeHandlerFactory>(() =>
+        internal static Lazy<TypeHandlerFactory> typeHandlerFactory = new Lazy<TypeHandlerFactory>(() =>
         {
             var thf = new TypeHandlerFactory();
             CompositionContainer.Value.SatisfyImportsOnce(thf);
@@ -54,6 +54,17 @@ namespace TTRider.Osminoq
         
         //DateTime,
         //Guid
+
+        public static MethodInfo GetTypeHandler(string dataType)
+        {
+            MethodInfo handler;
+            if (!typeHandlerFactory.Value.TryGetTypeHandler(dataType, out handler))
+            {
+                throw new InvalidDataException("Unknown Data type:" + dataType);
+            }
+            return handler;
+        }
+
 
 
         public static Type GetDataItemType(IExtractorPartition currentPartition)
@@ -148,6 +159,11 @@ namespace TTRider.Osminoq
             //ILout.Emit(OpCodes.Stfld, nfl3);
 
             //ILout.Emit(OpCodes.Ret);
+        }
+
+        public static string CleanupPropertyName(string name)
+        {
+            return name;
         }
     }
 
