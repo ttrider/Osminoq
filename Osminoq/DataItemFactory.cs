@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TTRider.Osminoq.TypeHandlers;
@@ -27,12 +28,18 @@ namespace TTRider.Osminoq
             return thf;
         }, LazyThreadSafetyMode.ExecutionAndPublication);
 
-
-        static Lazy<ModuleBuilder> moduleBuilder = new Lazy<ModuleBuilder>(() =>
+        public static Lazy<AssemblyBuilder> assBuilder = new Lazy<AssemblyBuilder>(() =>
         {
             var dynamicAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                new AssemblyName("TTRider.Osminoq.Dynamic"), AssemblyBuilderAccess.Run);
-            return dynamicAssembly.DefineDynamicModule("TTRider.Osminoq.Dynamic");
+                new AssemblyName("TTRider.Osminoq.Dynamic"), AssemblyBuilderAccess.RunAndSave);
+            return dynamicAssembly;
+
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        public static Lazy<ModuleBuilder> moduleBuilder = new Lazy<ModuleBuilder>(() =>
+        {
+            return assBuilder.Value.DefineDynamicModule("TTRider.Osminoq.Dynamic");
+            
         }, LazyThreadSafetyMode.ExecutionAndPublication);
 
         public static Lazy<CompositionContainer> CompositionContainer = new Lazy<CompositionContainer>(() =>
@@ -49,11 +56,11 @@ namespace TTRider.Osminoq
         {
         }
 
-        
-        
-        
-        //DateTime,
-        //Guid
+
+        public static ConstructorInfo GetRegexCtor()
+        {
+            return typeof(Regex).GetConstructor(new Type[] { typeof(string), typeof(RegexOptions) });
+        }
 
         public static MethodInfo GetTypeHandler(string dataType)
         {
@@ -65,7 +72,21 @@ namespace TTRider.Osminoq
             return handler;
         }
 
+        public static TypeBuilder GetTypeBuilder(string name, Type baseType)
+        {
+            var module = moduleBuilder.Value;
 
+            var sb = new StringBuilder("Dynamic_");
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                sb.Append(CleanupPropertyName(name));
+                sb.Append("_");
+            }
+            sb.Append(Interlocked.Increment(ref TypeIndex));
+            sb.Append("_DataItem");
+
+            return module.DefineType(sb.ToString(), TypeAttributes.Class | TypeAttributes.Public, baseType);
+        }
 
         public static Type GetDataItemType(IExtractorPartition currentPartition)
         {
@@ -83,7 +104,7 @@ namespace TTRider.Osminoq
                 }
                 sb.Append(Interlocked.Increment(ref TypeIndex));
                 sb.Append("_DataItem");
-                
+
                 var typeBuilder = module.DefineType(sb.ToString(), TypeAttributes.Class | TypeAttributes.Public, typeof(DataItem));
 
                 var initializeMethod = typeBuilder.DefineMethod("Initialize", MethodAttributes.Family | MethodAttributes.Virtual, null, new Type[] { typeof(string[]) });
@@ -91,9 +112,9 @@ namespace TTRider.Osminoq
                 int index = 0;
                 foreach (var field in partition.Fields)
                 {
-                    var name = field.Name; 
+                    var name = field.Name;
                     //TODO: cleanup name
-                    
+
                     MethodInfo handler;
                     if (!typeHandlerFactory.Value.TryGetTypeHandler(field.DataType, out handler))
                     {
@@ -165,6 +186,27 @@ namespace TTRider.Osminoq
         {
             return name;
         }
+
+
+
+        public static string ProcessPattern(string value, Regex pattern)
+        {
+            if (pattern == null)
+            {
+                return value;
+            }
+            var match = pattern.Match(value);
+            if (!match.Success)
+            {
+                return value;
+            }
+
+            var group = match.Groups["value"];
+            return group.Success ? group.Value : value;
+        }
+
+        public static readonly MethodInfo ProcessPatternMethod =
+            typeof (DataItemFactory).GetMethod("ProcessPattern", BindingFlags.Public|BindingFlags.Static);
     }
 
     class PartitionComparer : IEqualityComparer<IExtractorPartition>

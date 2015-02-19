@@ -7,9 +7,7 @@ namespace TTRider.Osminoq
         string Name { get; }
         string Source { get; }
 
-        Regex Template { get; }
-        
-        Regex Validation { get; }
+        string Template { get; }
 
         string DataType { get; }
 

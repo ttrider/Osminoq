@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CsvHelper">
-      <HintPath>..\..\Osminoq\packages\CsvHelper.2.10.0\lib\net40-client\CsvHelper.dll</HintPath>
+      <HintPath>..\..\packages\CsvHelper.2.11.0\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -59,9 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Current_Employee_Names__Salaries__and_Position_Titles.csv" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="Data\Police_Stations.csv" />
     <None Include="Data\Sex_Offenders.csv" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Osminoq\Osminoq.csproj">

@@ -16,8 +16,7 @@ namespace TTRider.Osminoq
 
         public IList<IDataItemProperty> Fields { get; private set; }
         public string Name { get; set; }
-        public Regex Template { get; set; }
-        public Regex Validation { get; set; }
+        public string Template { get; set; }
         public string DataType { get; set; }
         public bool IsArray { get; set; }
         public string Source { get; set; }

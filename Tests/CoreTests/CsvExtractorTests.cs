@@ -57,6 +57,11 @@ namespace TTRider.Osminoq.CoreTests
                 partition.Fields.Add(new DataItemProperty() { Name = "TTY", DataType = "string", Source = "8" });
                 partition.Fields.Add(new DataItemProperty() { Name = "LOCATION", DataType = "string", Source = "9" });
 
+                partition.Fields.Add(new DataItemProperty() { Name = "Latitude", DataType = "double", Source = "9", Template = @"\((?'value'[\-0-9\.]+),"});
+                partition.Fields.Add(new DataItemProperty() { Name = "Longditude", DataType = "double", Source = "9", Template = @",\s*(?'value'[\-0-9\.]+)\)"});
+
+
+
                 settings.Partitions.Add(partition);
 
                 using (var e = new CsvExtractor(fl, settings))
@@ -65,12 +70,14 @@ namespace TTRider.Osminoq.CoreTests
                     var item = e.ExtractDataItem();
                     while (item != null)
                     {
-
+                        dynamic di = item;
 
 
                         item = e.ExtractDataItem();
                     }
                 }
+
+//                DataItemFactory.assBuilder.Value.Save(@"DataItemFactory.dll", PortableExecutableKinds.ILOnly, ImageFileMachine.AMD64);
             }
         }
     }
