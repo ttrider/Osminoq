@@ -72,6 +72,7 @@ namespace TTRider.Osminoq.CoreTests
                     {
                         dynamic di = item;
 
+                        
 
                         item = e.ExtractDataItem();
                     }

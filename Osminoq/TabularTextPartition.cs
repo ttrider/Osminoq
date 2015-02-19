@@ -111,6 +111,8 @@ namespace TTRider.Osminoq
             var initializeMethod = typeBuilder.DefineMethod("Initialize", MethodAttributes.Family | MethodAttributes.Virtual, null, new Type[] { typeof(string[]) });
             var init = initializeMethod.GetILGenerator();
 
+            var templateIndex = 0;
+
             foreach (var field in partition.Fields)
             {
                 // source can be either @name or just a number
@@ -120,23 +122,23 @@ namespace TTRider.Osminoq
                 var index = source.StartsWith("@") ? fields[source.Substring(1)] : int.Parse(source);
                 if (index >= fields.Count) throw new Exception();
 
-
-                if (!string.IsNullOrWhiteSpace(field.Template))
-                {
-                    initCctor.Emit(OpCodes.Ldsfld, patternsDef);
-                    initCctor.Emit(OpCodes.Ldc_I4_S, index);
-                    initCctor.Emit(OpCodes.Ldstr, field.Template);
-                    initCctor.Emit(OpCodes.Ldc_I4_S, 9);
-                    initCctor.Emit(OpCodes.Newobj, DataItemFactory.GetRegexCtor());
-                    initCctor.Emit(OpCodes.Stelem_Ref);
-
-                }
-
-
                 var name = DataItemFactory.CleanupPropertyName(field.Name);
                 var dataHandler = DataItemFactory.GetTypeHandler(field.DataType);
 
-                var fieldDef = typeBuilder.DefineField("_" + name, dataHandler.ReturnType, FieldAttributes.Public);
+                var fieldDef = typeBuilder.DefineField("_" + name, dataHandler.ReturnType, FieldAttributes.Private);
+
+                var propDef = typeBuilder.DefineProperty(name, PropertyAttributes.None, dataHandler.ReturnType, new Type[0]);
+                var propMethod = typeBuilder.DefineMethod("get_" + name, MethodAttributes.Public, dataHandler.ReturnType, new Type[0]);
+                
+                
+                var propMethodInit = propMethod.GetILGenerator();
+                propMethodInit.DeclareLocal(dataHandler.ReturnType);
+                propMethodInit.Emit(OpCodes.Ldarg_0);
+                propMethodInit.Emit(OpCodes.Ldfld, fieldDef);
+                propMethodInit.Emit(OpCodes.Stloc_0);
+                propMethodInit.Emit(OpCodes.Ldloc_0);
+                propMethodInit.Emit(OpCodes.Ret);
+                propDef.SetGetMethod(propMethod);
 
 
                 init.Emit(OpCodes.Ldarg_0);
@@ -144,10 +146,24 @@ namespace TTRider.Osminoq
                 init.Emit(OpCodes.Ldc_I4_S, index);
                 init.Emit(OpCodes.Ldelem_Ref);
 
-                init.Emit(OpCodes.Ldsfld,  patternsDef);
-                init.Emit(OpCodes.Ldc_I4_S, index);
-                init.Emit(OpCodes.Ldelem_Ref);
-                init.Emit(OpCodes.Call, DataItemFactory.ProcessPatternMethod);
+                if (!string.IsNullOrWhiteSpace(field.Template))
+                {
+                    initCctor.Emit(OpCodes.Ldsfld, patternsDef);
+                    initCctor.Emit(OpCodes.Ldc_I4_S, templateIndex);
+                    initCctor.Emit(OpCodes.Ldstr, field.Template);
+                    initCctor.Emit(OpCodes.Ldc_I4_S, 9);
+                    initCctor.Emit(OpCodes.Newobj, DataItemFactory.GetRegexCtor());
+                    initCctor.Emit(OpCodes.Stelem_Ref);
+
+
+                    init.Emit(OpCodes.Ldsfld, patternsDef);
+                    init.Emit(OpCodes.Ldc_I4_S, templateIndex);
+                    init.Emit(OpCodes.Ldelem_Ref);
+                    init.Emit(OpCodes.Call, DataItemFactory.ProcessPatternMethod);
+
+                    templateIndex++;
+                }
+
                 init.Emit(OpCodes.Call, dataHandler);
                 init.Emit(OpCodes.Stfld, fieldDef);
 

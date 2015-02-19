@@ -31,7 +31,7 @@ namespace TTRider.Osminoq.TypeHandlers
     [Export(typeof(IDataItemTypeHandler))]
     public class IntegerTypeHandler : IDataItemTypeHandler
     {
-        private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        private static readonly MethodInfo ConverterMethod = typeof(IntegerTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
         public string Id { get { return "integer"; } }
 
@@ -60,7 +60,7 @@ namespace TTRider.Osminoq.TypeHandlers
     [Export(typeof(IDataItemTypeHandler))]
     public class DoubleTypeHandler : IDataItemTypeHandler
     {
-        private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        private static readonly MethodInfo ConverterMethod = typeof(DoubleTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
         public string Id { get { return "double"; } }
 
@@ -88,7 +88,7 @@ namespace TTRider.Osminoq.TypeHandlers
     [Export(typeof(IDataItemTypeHandler))]
     public class BooleanTypeHandler : IDataItemTypeHandler
     {
-        private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        private static readonly MethodInfo ConverterMethod = typeof(BooleanTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
         public string Id { get { return "boolean"; } }
 
@@ -116,7 +116,7 @@ namespace TTRider.Osminoq.TypeHandlers
     [Export(typeof(IDataItemTypeHandler))]
     public class DateTimeTypeHandler : IDataItemTypeHandler
     {
-        private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        private static readonly MethodInfo ConverterMethod = typeof(DateTimeTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
         public string Id { get { return "datetime"; } }
 
@@ -144,7 +144,7 @@ namespace TTRider.Osminoq.TypeHandlers
     [Export(typeof(IDataItemTypeHandler))]
     public class GuidTypeHandler : IDataItemTypeHandler
     {
-        private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        private static readonly MethodInfo ConverterMethod = typeof(GuidTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
         public string Id { get { return "guid"; } }
 
