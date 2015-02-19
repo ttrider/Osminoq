@@ -11,8 +11,6 @@ namespace TTRider.Osminoq
     
     public interface IDataItemTypeHandler
     {
-        Type TargetType { get; }
-
         MethodInfo ConverterInfo { get; }
     }
 }

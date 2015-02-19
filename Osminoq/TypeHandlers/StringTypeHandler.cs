@@ -11,10 +11,6 @@ namespace TTRider.Osminoq.TypeHandlers
     {
         private static readonly MethodInfo ConverterMethod = typeof(StringTypeHandler).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
 
-        public string Id { get { return "string"; } }
-        
-        public Type TargetType { get { return typeof (string); } }
-
         public MethodInfo ConverterInfo { get { return ConverterMethod; } }
 
 

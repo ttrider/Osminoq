@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -15,8 +12,7 @@ namespace TTRider.Osminoq.Csv
     {
         private TextReader textReader;
         private CsvParser parser;
-
-        protected TabularTextRecordsetDefiniton CurrentPartition { get; private set; }
+        private TabularTextRecordsetAdapter recordsetAdapter;
         
 
         public CsvExtractor(Stream stream, IExtractorSettings settings)
@@ -54,7 +50,7 @@ namespace TTRider.Osminoq.Csv
             }
 
             // at this point we have a first record, with column names, if available
-            if (this.CurrentPartition == null)
+            if (this.recordsetAdapter == null)
             {
                 // we support only one partition for CSV files
                 var partition = this.Settings.Partitions.First();
@@ -64,13 +60,14 @@ namespace TTRider.Osminoq.Csv
                 if (Settings.HasHeaderRecord)
                 {
                     // buffer contains field names
-                    this.CurrentPartition = new TabularTextRecordsetDefiniton(partition, buffer);
+                    this.recordsetAdapter = new TabularTextRecordsetAdapter(partition, buffer);
 
                     // we actually need to return the first data row now
                     return this.ExtractRecord();
                 }
-                this.CurrentPartition = new TabularTextRecordsetDefiniton(partition, buffer.Length);
+                this.recordsetAdapter = new TabularTextRecordsetAdapter(partition, buffer.Length);
             }
+
             return buffer;
         }
 
@@ -82,7 +79,7 @@ namespace TTRider.Osminoq.Csv
                 return null;
             }
 
-            return this.CurrentPartition.CreateDataItem(buffer);
+            return this.recordsetAdapter.CreateDataItem(buffer);
         }
 
 

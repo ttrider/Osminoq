@@ -72,9 +72,9 @@ namespace TTRider.Osminoq
 
         protected override void Initialize(string[] values)
         {
-            _v1 = StringTypeHandler.Convert(DataItemFactory.ProcessPattern(values[0], __patterns__[0]));
+            _v1 = StringTypeHandler.Convert(DataItemUtilities.ProcessPattern(values[0], __patterns__[0]));
             _v2 = DoubleTypeHandler.Convert(values[1]);
-            _v3 = StringTypeHandler.Convert(DataItemFactory.ProcessPattern(values[2], __patterns__[1]));
+            _v3 = StringTypeHandler.Convert(DataItemUtilities.ProcessPattern(values[2], __patterns__[1]));
         }
     }
 
