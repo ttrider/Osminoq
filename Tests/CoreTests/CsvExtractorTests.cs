@@ -14,21 +14,21 @@ namespace TTRider.Osminoq.CoreTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorNullNull()
         {
-            var e = new CsvExtractor(null, null);
+            var e = new CsvDataItemReader(null, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorValNull()
         {
-            var e = new CsvExtractor(new MemoryStream(), null);
+            var e = new CsvDataItemReader(new MemoryStream(), null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorNullVal()
         {
-            var e = new CsvExtractor(null, new ExtractorSettings());
+            var e = new CsvDataItemReader(null, new ExtractorSettings());
         }
 
 
@@ -64,7 +64,7 @@ namespace TTRider.Osminoq.CoreTests
 
                 settings.Partitions.Add(partition);
 
-                using (var e = new CsvExtractor(fl, settings))
+                using (var e = new CsvDataItemReader(fl, settings))
                 {
 
                     var item = e.ExtractDataItem();

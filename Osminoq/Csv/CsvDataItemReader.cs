@@ -8,14 +8,14 @@ using CsvHelper.Configuration;
 
 namespace TTRider.Osminoq.Csv
 {
-    public class CsvExtractor : Extractor
+    public class CsvDataItemReader : DataItemReader
     {
         private TextReader textReader;
         private CsvParser parser;
         private TabularTextRecordsetAdapter recordsetAdapter;
         
 
-        public CsvExtractor(Stream stream, IExtractorSettings settings)
+        public CsvDataItemReader(Stream stream, IExtractorSettings settings)
             : base(settings)
         {
             if (stream == null) throw new ArgumentNullException("stream");

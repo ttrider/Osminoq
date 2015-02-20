@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq
 {
-    public abstract class Extractor : IExtractor
+    public abstract class DataItemReader : IDataItemReader
     {
         public IExtractorSettings Settings { get; private set; }
 
-        protected Extractor(IExtractorSettings settings)
+        protected DataItemReader(IExtractorSettings settings)
         {
             if (settings == null) throw new ArgumentNullException("settings");
             this.Settings = settings;
         }
 
+        #region Dispose
 
-        ~Extractor()
+        ~DataItemReader()
         {
             Dispose(false);
         }
@@ -50,8 +51,10 @@ namespace TTRider.Osminoq
 
         public event EventHandler Disposed;
         public bool IsDisposed { get; private set; }
+        #endregion Dispose
 
-
+        #region IDataItemReader
         public abstract IDataItem ExtractDataItem();
+        #endregion IDataItemReader
     }
 }

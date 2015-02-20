@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq
 {
-    public class Record
+    interface ITabularTextInitalizableDataItem
     {
+        void Initialize(string[] values);
+
     }
 }
