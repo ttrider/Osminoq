@@ -19,7 +19,7 @@ namespace TTRider.Osminoq
             this.dataItemType = dataItemType;
         }
 
-        protected T CreateDataItem<T>()
+        public T CreateDataItem<T>()
         {
             return (T)Activator.CreateInstance(this.dataItemType);
         }

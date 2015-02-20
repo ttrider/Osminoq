@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.Osminoq.Csv;
 using TTRider.Osminoq.Settings;
 
-namespace TTRider.Osminoq.CoreTests
+namespace TTRider.Osminoq.CoreTests.Csv
 {
     [TestClass]
     public class CsvExtractorTests
@@ -38,7 +38,7 @@ namespace TTRider.Osminoq.CoreTests
             using (
                 var fl =
                     Assembly.GetExecutingAssembly()
-                        .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Data.Police_Stations.csv"))
+                        .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Csv.Data.Police_Stations.csv"))
             {
 
                 var dataPackageModel = new DataPackageModel() { HasHeaderRecord = true, Delimeter = "," };
@@ -46,19 +46,19 @@ namespace TTRider.Osminoq.CoreTests
                 var dataSetModel = new DataSetModel();
 
 
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "District", DataType = "string", Source = "0" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Address", DataType = "string", Source = "1" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "City", DataType = "string", Source = "2" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "State", DataType = "string", Source = "3" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Zip", DataType = "string", Source = "4" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Website", DataType = "string", Source = "5" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Phone", DataType = "string", Source = "6" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Fax", DataType = "string", Source = "7" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "TTY", DataType = "string", Source = "8" });
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Location", DataType = "string", Source = "9" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "District", DataType = "string", Source = "0" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Address", DataType = "string", Source = "1" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "City", DataType = "string", Source = "2" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "State", DataType = "string", Source = "3" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Zip", DataType = "string", Source = "4" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Website", DataType = "string", Source = "5" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Phone", DataType = "string", Source = "6" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Fax", DataType = "string", Source = "7" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "TTY", DataType = "string", Source = "8" });
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Location", DataType = "string", Source = "9" });
 
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Latitude", DataType = "double", Source = "9", Template = @"\((?'value'[\-0-9\.]+),"});
-                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Longditude", DataType = "double", Source = "9", Template = @",\s*(?'value'[\-0-9\.]+)\)"});
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Latitude", DataType = "double", Source = "9", Template = @"\((?'value'[\-0-9\.]+),"});
+                dataSetModel.Properties.Add(new DataItemProperty { Name = "Longditude", DataType = "double", Source = "9", Template = @",\s*(?'value'[\-0-9\.]+)\)"});
 
 
 
@@ -84,7 +84,7 @@ namespace TTRider.Osminoq.CoreTests
             using (
                 var fl =
                     Assembly.GetExecutingAssembly()
-                        .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Data.malenames.txt"))
+                        .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Csv.Data.malenames.txt"))
             {
 
                 var dataPackageModel = new DataPackageModel() { HasHeaderRecord = false, Delimeter = "," };

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace TTRider.Osminoq
 {
-    class TabularTextRecordsetAdapter : RecordsetAdapter
+    public class TabularTextRecordsetAdapter : RecordsetAdapter
     {
         public TabularTextRecordsetAdapter(IDataSetModel partition, int fieldCount)
             :base(GenerateDataItemType(partition, new TabularSourceResolver(fieldCount)))
@@ -110,15 +110,11 @@ namespace TTRider.Osminoq
             return typeBuilder.CreateType();
         }
 
-        internal IDataItem CreateDataItem(string[] buffer)
+        public IDataItem CreateDataItem(string[] buffer)
         {
             var item = this.CreateDataItem<ITabularTextInitalizableDataItem>();
             item.Initialize(buffer);
             return (IDataItem)item;
         }
-
-
-
-
     }
 }
