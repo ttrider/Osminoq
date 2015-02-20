@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq.Settings
 {
-    public class ExtractorSettings : IExtractorSettings
+    public class DataPackageModel : IDataPackageModel
     {
-        public ExtractorSettings()
+        public DataPackageModel()
         {
             this.Encoding = Encoding.UTF8;
             this.BufferSize = 1024*1024;
@@ -16,7 +16,7 @@ namespace TTRider.Osminoq.Settings
             this.Delimeter = ",";
             this.HasHeaderRecord = true;
 
-            this.Partitions = new List<IExtractorPartition>();
+            this.DataSetModels = new List<IDataSetModel>();
         }
 
 
@@ -27,6 +27,6 @@ namespace TTRider.Osminoq.Settings
         public DataErrorStrategy DataErrorStrategy { get; private set; }
 
 
-        public IList<IExtractorPartition> Partitions { get; private set; } 
+        public IList<IDataSetModel> DataSetModels { get; private set; } 
     }
 }

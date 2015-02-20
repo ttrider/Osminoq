@@ -8,26 +8,8 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq
 {
-    public class DataItem : IDataItem, ITabularTextInitalizableDataItem
+    public class DataItem : IDataItem
     {
-        void ITabularTextInitalizableDataItem.Initialize(string[] values)
-        {
-            this.Initialize(values);
-        }
-
-        protected virtual void Initialize(string[] values)
-        {
-        }
-
-
-
-
-
-        protected virtual KeyValuePair<string, PropertyInfo>[] GetPropertyMap()
-        {
-            return new KeyValuePair<string, PropertyInfo>[0];
-        }
-
     }
 }
 

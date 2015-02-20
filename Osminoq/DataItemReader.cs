@@ -8,9 +8,9 @@ namespace TTRider.Osminoq
 {
     public abstract class DataItemReader : IDataItemReader
     {
-        public IExtractorSettings Settings { get; private set; }
+        public IDataPackageModel Settings { get; private set; }
 
-        protected DataItemReader(IExtractorSettings settings)
+        protected DataItemReader(IDataPackageModel settings)
         {
             if (settings == null) throw new ArgumentNullException("settings");
             this.Settings = settings;
@@ -54,7 +54,9 @@ namespace TTRider.Osminoq
         #endregion Dispose
 
         #region IDataItemReader
-        public abstract IDataItem ExtractDataItem();
+        public abstract IDataItem ReadDataItem();
+        public abstract bool NextDataSet();
+
         #endregion IDataItemReader
     }
 }

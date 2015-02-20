@@ -15,14 +15,14 @@ namespace TTRider.Osminoq.Csv
         private TabularTextRecordsetAdapter recordsetAdapter;
         
 
-        public CsvDataItemReader(Stream stream, IExtractorSettings settings)
+        public CsvDataItemReader(Stream stream, IDataPackageModel settings)
             : base(settings)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             if (settings == null) throw new ArgumentNullException("settings");
 
-            if (settings.Partitions == null) throw new ArgumentException("settings.Partitions == null", "settings");
-            if (settings.Partitions.Count == 0) throw new ArgumentOutOfRangeException("settings.Partitions is empty", "settings");
+            if (settings.DataSetModels == null) throw new ArgumentException("settings.Partitions == null", "settings");
+            if (settings.DataSetModels.Count == 0) throw new ArgumentOutOfRangeException("settings.Partitions is empty", "settings");
 
 
             this.textReader = new StreamReader(stream, settings.Encoding, true, settings.BufferSize, true);
@@ -53,7 +53,7 @@ namespace TTRider.Osminoq.Csv
             if (this.recordsetAdapter == null)
             {
                 // we support only one partition for CSV files
-                var partition = this.Settings.Partitions.First();
+                var partition = this.Settings.DataSetModels.First();
                 //TODO validate that it contains known data types
 
 
@@ -71,7 +71,7 @@ namespace TTRider.Osminoq.Csv
             return buffer;
         }
 
-        public override IDataItem ExtractDataItem()
+        public override IDataItem ReadDataItem()
         {
             var buffer = this.ExtractRecord();
             if (buffer == null)
@@ -80,6 +80,11 @@ namespace TTRider.Osminoq.Csv
             }
 
             return this.recordsetAdapter.CreateDataItem(buffer);
+        }
+
+        public override bool NextDataSet()
+        {
+            return false;
         }
 
 

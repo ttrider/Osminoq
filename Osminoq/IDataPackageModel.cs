@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TTRider.Osminoq
 {
-    public interface IExtractorSettings
+    public interface IDataPackageModel
     {
         Encoding Encoding { get; set; }
         int BufferSize { get; set; }
@@ -15,6 +15,6 @@ namespace TTRider.Osminoq
 
         DataErrorStrategy DataErrorStrategy { get; }
 
-        IList<IExtractorPartition> Partitions { get; } 
+        IList<IDataSetModel> DataSetModels { get; } 
     }
 }

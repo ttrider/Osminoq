@@ -12,8 +12,8 @@ namespace TTRider.Osminoq
         //Task<IDataItem> ExtractDataItemAsync();
         //Task<IDataItem> ExtractDataItemAsync(CancellationToken cancellationToken);
 
-        IDataItem ExtractDataItem();
+        IDataItem ReadDataItem();
 
-
+        bool NextDataSet();
     }
 }

@@ -11,10 +11,10 @@ namespace TTRider.Osminoq
     {
         public DataItemProperty()
         {
-            this.Fields = new List<IDataItemProperty>();
+            this.Properties = new List<IDataItemProperty>();
         }
 
-        public IList<IDataItemProperty> Fields { get; private set; }
+        public IList<IDataItemProperty> Properties { get; private set; }
         public string Name { get; set; }
         public string Template { get; set; }
         public string DataType { get; set; }

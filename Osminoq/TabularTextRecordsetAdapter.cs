@@ -8,102 +8,50 @@ namespace TTRider.Osminoq
 {
     class TabularTextRecordsetAdapter : RecordsetAdapter
     {
-        public TabularTextRecordsetAdapter(IExtractorPartition partition, int fieldCount)
+        public TabularTextRecordsetAdapter(IDataSetModel partition, int fieldCount)
             :base(GenerateDataItemType(partition, new TabularSourceResolver(fieldCount)))
         {
         }
 
-        public TabularTextRecordsetAdapter(IExtractorPartition partition, IEnumerable<string> fieldNames)
+        public TabularTextRecordsetAdapter(IDataSetModel partition, IEnumerable<string> fieldNames)
             :base(GenerateDataItemType(partition, new TabularSourceResolver(fieldNames)))
         {
         }
 
-        private static Type GenerateDataItemType(IExtractorPartition partition, TabularSourceResolver sourceResolver)
+        private static Type GenerateDataItemType(IDataSetModel partition, TabularSourceResolver sourceResolver)
         {
-            var typeBuilder = DataItemFactory.GetTypeBuilder(partition.Id, typeof(DataItem));
+            var typeBuilder = DataItemFactory.GetTypeBuilder(partition.Source, typeof(DataItem));
+            typeBuilder.AddInterfaceImplementation(typeof(ITabularTextInitalizableDataItem));
+
 
             var patternsDef = typeBuilder.DefineField("__patterns__", typeof(Regex[]),
                 FieldAttributes.Static | FieldAttributes.Private);
 
-            var propertiesDef = typeBuilder.DefineField("__properties__", typeof(KeyValuePair<string, PropertyInfo>[]),
-                FieldAttributes.Static | FieldAttributes.Private);
-
-            var getPropertyMapMethod = typeBuilder.DefineMethod("GetPropertyMap", MethodAttributes.Family | MethodAttributes.Virtual,
-                typeof(KeyValuePair<string, PropertyInfo>[]), new Type[0]);
-            
-            var propertiesDefInit = getPropertyMapMethod.GetILGenerator();
-            propertiesDefInit.DeclareLocal(typeof(KeyValuePair<string, PropertyInfo>[]));
-            propertiesDefInit.Emit(OpCodes.Ldsfld, propertiesDef);
-            propertiesDefInit.Emit(OpCodes.Stloc_0);
-            propertiesDefInit.Emit(OpCodes.Ldloc_0);
-            propertiesDefInit.Emit(OpCodes.Ret);
-
-
-
             var cctor = typeBuilder.DefineTypeInitializer();
             var initCctor = cctor.GetILGenerator();
 
-            initCctor.Emit(OpCodes.Ldc_I4_S, partition.Fields.Count);
+            initCctor.Emit(OpCodes.Ldc_I4_S, partition.Properties.Count);
             initCctor.Emit(OpCodes.Newarr, typeof(Regex));
             initCctor.Emit(OpCodes.Stsfld, patternsDef);
 
 
 
-            /*
- 
-             ldtoken    TTRider.Osminoq.TestTabularTextDataItem
-             call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
-             stloc.0
-             ldc.i4.3
-             newarr     valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             
-             stsfld     valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>[] TTRider.Osminoq.TestTabularTextDataItem::__properties__
-             
-             ldsfld     valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>[] TTRider.Osminoq.TestTabularTextDataItem::__properties__
-             ldc.i4.0
-             ldelema    valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             ldstr      "v1"
-             ldloc.0
-             ldstr      "v1"
-             callvirt   instance class [mscorlib]System.Reflection.PropertyInfo [mscorlib]System.Type::GetProperty(string)
-             newobj     instance void valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>::.ctor(!0,!1)
-             
-             stobj      valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             
-             ldsfld     valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>[] TTRider.Osminoq.TestTabularTextDataItem::__properties__
-             ldc.i4.1
-             ldelema    valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             ldstr      "v2"
-             ldloc.0
-             ldstr      "v2"
-             callvirt   instance class [mscorlib]System.Reflection.PropertyInfo [mscorlib]System.Type::GetProperty(string)
-             newobj     instance void valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>::.ctor(!0,!1)
-             
-             stobj      valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             
-             ldsfld     valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>[] TTRider.Osminoq.TestTabularTextDataItem::__properties__
-             ldc.i4.2
-             ldelema    valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             ldstr      "v3"
-             ldloc.0
-             ldstr      "v3"
-             callvirt   instance class [mscorlib]System.Reflection.PropertyInfo [mscorlib]System.Type::GetProperty(string)
-             newobj     instance void valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>::.ctor(!0,!1)
-             
-             stobj      valuetype [mscorlib]System.Collections.Generic.KeyValuePair`2<string,class [mscorlib]System.Reflection.PropertyInfo>
-             
+            var initializeMethod = typeBuilder.DefineMethod(
+                "TTRider.Osminoq.ITabularTextInitalizableDataItem.Initialize", 
+                    MethodAttributes.Private |
+                    MethodAttributes.Virtual | 
+                    MethodAttributes.Final |
+                    MethodAttributes.HideBySig|
+                    MethodAttributes.NewSlot,
+                null,
+                new [] { typeof(string[]) });
+            typeBuilder.DefineMethodOverride(initializeMethod, typeof(TTRider.Osminoq.ITabularTextInitalizableDataItem).GetMethod("Initialize"));
 
- 
-             */
-
-
-            var initializeMethod = typeBuilder.DefineMethod("Initialize", MethodAttributes.Family | MethodAttributes.Virtual,
-                null, new[] { typeof(string[]) });
             var init = initializeMethod.GetILGenerator();
 
             var templateIndex = 0;
 
-            foreach (var field in partition.Fields)
+            foreach (var field in partition.Properties)
             {
                 var index = sourceResolver.ResolveSource(field.Source);
 

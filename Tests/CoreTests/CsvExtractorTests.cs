@@ -28,7 +28,7 @@ namespace TTRider.Osminoq.CoreTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorNullVal()
         {
-            var e = new CsvDataItemReader(null, new ExtractorSettings());
+            var e = new CsvDataItemReader(null, new DataPackageModel());
         }
 
 
@@ -41,44 +41,72 @@ namespace TTRider.Osminoq.CoreTests
                         .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Data.Police_Stations.csv"))
             {
 
-                var settings = new ExtractorSettings() { HasHeaderRecord = true, Delimeter = "," };
+                var dataPackageModel = new DataPackageModel() { HasHeaderRecord = true, Delimeter = "," };
 
-                var partition = new ExtractorPartition() { Index = 0 };
-
-
-                partition.Fields.Add(new DataItemProperty() { Name = "DISTRICT", DataType = "string", Source = "0" });
-                partition.Fields.Add(new DataItemProperty() { Name = "ADDRESS", DataType = "string", Source = "1" });
-                partition.Fields.Add(new DataItemProperty() { Name = "CITY", DataType = "string", Source = "2" });
-                partition.Fields.Add(new DataItemProperty() { Name = "STATE", DataType = "string", Source = "3" });
-                partition.Fields.Add(new DataItemProperty() { Name = "ZIP", DataType = "string", Source = "4" });
-                partition.Fields.Add(new DataItemProperty() { Name = "WEBSITE", DataType = "string", Source = "5" });
-                partition.Fields.Add(new DataItemProperty() { Name = "PHONE", DataType = "string", Source = "6" });
-                partition.Fields.Add(new DataItemProperty() { Name = "FAX", DataType = "string", Source = "7" });
-                partition.Fields.Add(new DataItemProperty() { Name = "TTY", DataType = "string", Source = "8" });
-                partition.Fields.Add(new DataItemProperty() { Name = "LOCATION", DataType = "string", Source = "9" });
-
-                partition.Fields.Add(new DataItemProperty() { Name = "Latitude", DataType = "double", Source = "9", Template = @"\((?'value'[\-0-9\.]+),"});
-                partition.Fields.Add(new DataItemProperty() { Name = "Longditude", DataType = "double", Source = "9", Template = @",\s*(?'value'[\-0-9\.]+)\)"});
+                var dataSetModel = new DataSetModel();
 
 
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "District", DataType = "string", Source = "0" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Address", DataType = "string", Source = "1" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "City", DataType = "string", Source = "2" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "State", DataType = "string", Source = "3" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Zip", DataType = "string", Source = "4" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Website", DataType = "string", Source = "5" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Phone", DataType = "string", Source = "6" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Fax", DataType = "string", Source = "7" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "TTY", DataType = "string", Source = "8" });
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Location", DataType = "string", Source = "9" });
 
-                settings.Partitions.Add(partition);
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Latitude", DataType = "double", Source = "9", Template = @"\((?'value'[\-0-9\.]+),"});
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Longditude", DataType = "double", Source = "9", Template = @",\s*(?'value'[\-0-9\.]+)\)"});
 
-                using (var e = new CsvDataItemReader(fl, settings))
+
+
+                dataPackageModel.DataSetModels.Add(dataSetModel);
+
+                using (var e = new CsvDataItemReader(fl, dataPackageModel))
                 {
-
-                    var item = e.ExtractDataItem();
-                    while (item != null)
+                    do
                     {
-                        dynamic di = item;
-
+                        foreach (var item in e.ReadDataItems())
+                        {
+                            Console.WriteLine(item.GetPropertyValue("Phone"));
+                        }
                         
-
-                        item = e.ExtractDataItem();
-                    }
+                    } while (e.NextDataSet());
                 }
+            }
+        }
 
-//                DataItemFactory.assBuilder.Value.Save(@"DataItemFactory.dll", PortableExecutableKinds.ILOnly, ImageFileMachine.AMD64);
+        [TestMethod]
+        public void End2EndMaleNames()
+        {
+            using (
+                var fl =
+                    Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream("TTRider.Osminoq.CoreTests.Data.malenames.txt"))
+            {
+
+                var dataPackageModel = new DataPackageModel() { HasHeaderRecord = false, Delimeter = "," };
+
+                var dataSetModel = new DataSetModel();
+
+
+                dataSetModel.Properties.Add(new DataItemProperty() { Name = "Name", DataType = "string", Source = "0" });
+
+                dataPackageModel.DataSetModels.Add(dataSetModel);
+
+                using (var e = new CsvDataItemReader(fl, dataPackageModel))
+                {
+                    do
+                    {
+                        foreach (var item in e.ReadDataItems())
+                        {
+                            Console.WriteLine(item.GetPropertyValue("Name"));
+                        }
+
+                    } while (e.NextDataSet());
+                }
             }
         }
     }

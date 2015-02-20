@@ -6,7 +6,7 @@ using TTRider.Osminoq.TypeHandlers;
 
 namespace TTRider.Osminoq
 {
-    internal class TestTabularTextDataItem : DataItem
+    internal class TestTabularTextDataItem : DataItem, ITabularTextInitalizableDataItem
     {
         protected static Regex[] __patterns__;
 
@@ -43,26 +43,8 @@ namespace TTRider.Osminoq
             get { return this._v3; }
         }
 
-        protected override KeyValuePair<string, PropertyInfo>[] GetPropertyMap()
-        {
-            return __properties__;
-        }
 
-        public object GetValue(string property)
-        {
-            switch (property)
-            {
-                case "v1":
-                    return this._v1;
-                case "v2":
-                    return this._v2;
-                case "v3":
-                    return this._v3;
-            }
-            return null;
-        }
-
-        protected override void Initialize(string[] values)
+        void ITabularTextInitalizableDataItem.Initialize(string[] values)
         {
             _v1 = StringTypeHandler.Convert(DataItemUtilities.ProcessPattern(values[0], __patterns__[0]));
             _v2 = DoubleTypeHandler.Convert(values[1]);
